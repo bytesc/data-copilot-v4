@@ -1,7 +1,8 @@
 # config
 server_port: 8009
 server_host: "0.0.0.0"
-mysql: "mysql+pymysql://root:123456@localhost:3306/med_data"
+#mysql: "mysql+pymysql://root:123456@localhost:3306/med_data"
+mysql: "mysql+pymysql://root:@localhost:9306/Manticore"
 
 static_path: "http://127.0.0.1:8009/"
 

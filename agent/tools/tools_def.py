@@ -1,9 +1,12 @@
+import json
+
 import pandas as pd
 import sqlalchemy
 
 from agent.utils.get_config import config_data
 from agent.utils.llm_access.LLM import get_llm
 from .copilot.data_explanation import get_llm_data_explanation_func
+from .copilot.utils.dsl_search import query_data_func
 from .copilot.utils.read_db import execute_select
 from .data_trans.download_csv_to_pd import download_csv_to_dataframe, extract_csv_filename_from_url, read_csv_from_local
 
@@ -235,4 +238,103 @@ def load_data(url: str) -> pd.DataFrame:
     file_name = extract_csv_filename_from_url(url)
     df = read_csv_from_local("./tmp_imgs/"+file_name)
     return df
+
+
+def query_data(json_string: str) -> tuple[pd.DataFrame, int, bool]:
+    """
+    query_data(json_string: str) -> tuple[pd.DataFrame, int, bool]:
+    Query data from Manticore Search (elasticsearch like grammar) with json string
+    return results as a pandas DataFrame, total number of search results, and error flag.
+
+    Args:
+        json_string (str): JSON string containing the search query parameters
+
+    Returns:
+        tuple[pd.DataFrame, int, bool]:
+            - DataFrame containing the search results
+            - Total number of matches
+            - Boolean indicating if an error occurred (True = error, False = success)
+            Returns empty DataFrame, 0, and True if error occurs.
+
+    Examples:
+        # Example 1: Successful query
+        query_json = '''
+        {
+            "table": "brset",
+            "query": {
+                "match": {"'_all'": "diabetes"}
+            },
+            "limit": 3
+        }
+        '''
+        df, total_count, error = query_data(query_json)
+        # Output:
+        # df (pd.DataFrame):
+        #   patient_id diagnosis         patient_age diabetic_retinopathy
+        # 0      P001  diabetes               45                   2
+        # 1      P003  diabetes type 2         52                   1
+        # 2      P007  prediabetes             58                   0
+        # total_count: 15
+        # error: False
+
+        # Example 2: Range query
+        query_json = '''
+        {
+            "table": "brset",
+            "query": {
+                "range": {"'patient_age'": {"gte": 40, "lte": 60}}
+            },
+            "limit": 2
+        }
+        '''
+        df, total_count, error = query_data(query_json)
+        # Output:
+        # df (pd.DataFrame):
+        #   patient_id diagnosis patient_age diabetic_retinopathy
+        # 0      P001  diabetes          45                   2
+        # 1      P003  hypertension      52                   0
+        # total_count: 42
+        # error: False
+
+        # Example 3: Error case (invalid table name)
+        query_json = '''
+        {
+            "table": "nonexistent_table",
+            "query": {
+                "match": {"'diagnosis'": "diabetes"}
+            }
+        }
+        '''
+        df, total_count, error = query_data(query_json)
+        # Output:
+        # df (pd.DataFrame): Empty DataFrame
+        # total_count: 0
+        # error: True
+
+        # Example 4: Empty result (not an error)
+        query_json = '''
+        {
+            "table": "brset",
+            "query": {
+                "match": {"'diagnosis'": "nonexistent_condition"}
+            }
+        }
+        '''
+        df, total_count, error = query_data(query_json)
+        # Output:
+        # df (pd.DataFrame): Empty DataFrame
+        # total_count: 0
+        # error: False
+
+    Important Note:
+        When specifying field names in the query, make sure to properly quote field names
+        that contain special characters. For example:
+
+        Wrong: {'match': {'diabetic_retinopathy': 1}}
+        Correct: {'match': {"'diabetic_retinopathy'": 1}}
+
+        Field names with underscores or other special characters need to be enclosed in quotes.
+    """
+    ans, count, err_flag = query_data_func(json_string)
+    return ans, count, err_flag
 

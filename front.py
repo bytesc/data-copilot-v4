@@ -166,8 +166,11 @@ def main():
         table_options.append({'label': display_name, 'value': table_name})
 
     # 添加表格选择和上传按钮
-    put_buttons(['Select Tables', 'Upload CSV File', 'Upload Document File'],
-                onclick=[lambda: handle_table_selection(table_options), handle_csv_upload, handle_doc_upload])
+    # put_buttons(['Select Tables', 'Upload CSV File', 'Upload Document File'],
+    #             onclick=[lambda: handle_table_selection(table_options), handle_csv_upload, handle_doc_upload])
+
+    put_buttons(['Select Tables'],
+                onclick=[lambda: handle_table_selection(table_options)])
 
     with put_collapse(f"Tables"):
         for table_name, rows in first_five_rows.items():

@@ -6,6 +6,7 @@ from .utils.call_llm_test import call_llm
 from .utils.parse_output import parse_generated_sql_code
 from .utils.read_db import execute_select
 
+
 def get_db_info_prompt(engine, simple=False, example=False, tables=None):
     data_prompt = """
 Here is the structure of the database:

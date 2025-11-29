@@ -3,8 +3,9 @@ import logging
 import pandas as pd
 
 from .tools.base_knowledge.get_base_knowledge import get_base_knowledge
+from .tools.copilot.dsl_json_code import get_data_info_prompt
 from .tools.copilot.utils.code_insert import insert_lines_into_function
-from .tools.tools_def import engine, llm, query_database, exe_sql
+from .tools.tools_def import engine, llm, query_database, exe_sql, query_data
 
 from .tools.copilot.python_code import get_py_code
 from .tools.copilot.utils.code_executor import execute_py_code
@@ -39,6 +40,10 @@ def get_cot_code_prompt(question, tables=None, use_all_functions=False):
     if query_database in function_set or exe_sql in function_set:
         data_prompt = get_db_info_prompt(engine, tables=tables, simple=False, example=False)
         database = "\nThe database content: \n" + data_prompt + "\n"
+
+    elif query_data in function_set:
+        data_prompt = get_data_info_prompt(engine, tables=tables, example=False)
+        database = "\nThe data brief: \n" + data_prompt + "\n"
 
     pre_prompt = """ 
 Please use the following functions to solve the problem.

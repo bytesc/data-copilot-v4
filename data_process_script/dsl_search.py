@@ -92,18 +92,36 @@ def show_results(result, title):
               f"糖尿病等级: {source.get('diabetic_retinopathy', 'N/A')}")
 
 
+def search_test():
+    """组合条件搜索：年龄+糖尿病视网膜病变等级"""
+    query = {
+        'table': 'brset',
+        'query': {'match': {"'diabetic_retinopathy'": 0}},
+        'fields': ['patient_sex'],
+        'limit': 100000,
+        'options': {
+            'max_matches': 1000000  # 提高最大匹配数
+        }
+    }
+    result = search_manticore_simple(query)
+    return result
+
+
 # 主函数
 if __name__ == "__main__":
     print("Manticore Search 简单查询示例")
 
-    # 1. 关键词搜索
-    result1 = search_by_keyword("diabetes")
-    show_results(result1, "关键词'diabetes'搜索结果")
+    # # 1. 关键词搜索
+    # result1 = search_by_keyword("diabetes")
+    # show_results(result1, "关键词'diabetes'搜索结果")
+    #
+    # # 2. 年龄范围搜索
+    # result2 = search_by_age(40, 60)
+    # show_results(result2, "年龄40-60岁患者")
+    #
+    # # 3. 组合条件搜索
+    # result3 = search_combined(50, 2)
+    # show_results(result3, "50岁以上且糖尿病视网膜病变等级2")
 
-    # 2. 年龄范围搜索
-    result2 = search_by_age(40, 60)
-    show_results(result2, "年龄40-60岁患者")
-
-    # 3. 组合条件搜索
-    result3 = search_combined(50, 2)
-    show_results(result3, "50岁以上且糖尿病视网膜病变等级2")
+    result4 = search_test()
+    show_results(result4, "last")
