@@ -1,5 +1,4 @@
-from agent.tools.copilot.utils.read_db import  execute_select
-
+from agent.tools.copilot.utils.read_db import execute_select
 
 def get_data_info_prompt(engine, example=False, tables=None):
     df = execute_select(engine, "SHOW TABLES")
@@ -34,7 +33,7 @@ Here is data samples(just samples, do not mock any data):
         # 添加示例数据
         for table_name in table_descriptions.keys():
             data_prompt += f"\n-- Sample data from {table_name} table:\n"
-            sample_df = execute_sql(engine, f"SELECT * FROM {table_name} LIMIT 3")
+            sample_df = execute_select(engine, f"SELECT * FROM {table_name} LIMIT 3")
 
             # 构建表头
             columns = sample_df.columns.tolist()

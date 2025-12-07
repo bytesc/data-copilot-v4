@@ -159,11 +159,11 @@ def main():
     first_five_rows = get_rows_from_all_tables()
     # print(first_five_rows)
 
-    table_comments = get_table_comments_dict()
-    table_options = []
-    for table_name, comment in table_comments.items():
-        display_name = f"{table_name} ({comment})" if comment else table_name
-        table_options.append({'label': display_name, 'value': table_name})
+    # table_comments = get_table_comments_dict()
+    # table_options = []
+    # for table_name, comment in table_comments.items():
+    #     display_name = f"{table_name} ({comment})" if comment else table_name
+    #     table_options.append({'label': display_name, 'value': table_name})
 
     # 添加表格选择和上传按钮
     # put_buttons(['Select Tables', 'Upload CSV File', 'Upload Document File'],
