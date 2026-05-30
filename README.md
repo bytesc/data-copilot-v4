@@ -39,14 +39,14 @@
 
 ### 工作流程
 
-![](./readme_img/flow2.png)
+![](./readme_img/flowo.png)
 
-基本流程：
-User query → Function selection → Code generation → Execution → Validation
-1. **Question**: 用户自然语言问题提问
-2. **Function Selection**: LLM 根据函数基本信息选择多个函数，通过函数依赖图(Function Graph)获得可用函数列表和详细注释（函数包括非智能体函数(Custum Function)和调用其它智能体的函数(Agent as Function)，实现多智能体协同）
-3. **Function Calls Chain**: LLM 根据函数列表和详细注释，生成调用多个函数的 python 代码并执行
-4. **Result Review**: LLM 回顾总结整个流程，评估问题是否解决，没有解决则反问用户，使其澄清问题或者提供更多信息
+整体链路：用户提问 → LLM 通过 MCP 工具调用 Analytics Service → Service 基于 DataHub 元数据做权限校验+字段映射+DSL 生成 → OpenSearch 聚合 → 标准化 JSON 回传 LLM → 输出带业务解读的结论
+
+#### 关键点
+- LLM 全程不碰真实 SQL/DSL，只拼装 JSON Schema，杜绝胡写
+- 图用固定绘图引擎（G2、Plotly、ECharts），JSON 驱动，稳定性最高
+- 能力天花板被 Schema 限定，新增图表需发版
 
 ### 任意数据导入
 
