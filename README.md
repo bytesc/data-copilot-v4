@@ -79,29 +79,6 @@ pip install -r requirement.txt
 ### 配置文件
 
 `./config/config.yaml`
-```yml
-# config
-server_port: 8009 # 部署端口
-server_host: "0.0.0.0"  # allow host
-# 数据库
-mysql: "mysql+pymysql://root:123456@localhost:3306/singapore_land"
-
-# 静态文件服务地址，本机域名/ip:端口
-static_path: "http://127.0.0.1:8009/"
-
-model_name: "qwen-max"
-# glm-4
-# deepseek-chat
-# qwen-max
-# gpt-4o-mini
-
-model_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
-# https://open.bigmodel.cn/api/paas/v4/
-# https://api.deepseek.com/v1/
-# https://dashscope.aliyuncs.com/compatible-mode/v1
-# https://api.openai.com/v1
-
-```
 
 ### 大语言模型配置
 
